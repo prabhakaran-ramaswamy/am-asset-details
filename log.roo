@@ -1,0 +1,15 @@
+// Spring Roo 2.0.0.RELEASE [rev 4a2e9f1] log opened at 2020-01-14 10:49:31
+project setup --topLevelPackage org.sample.capstone  --projectName AssertDetails
+jpa setup --provider HIBERNATE --database POSTGRES --userName postgres --password spectra#2018
+entity jpa --class ~.AssertDetails --table ASSERTDETAILS --sequenceName ASSERTDETAILS_SEQ --identifierStrategy SEQUENCE --identifierColumn ASSERTDETAILS_ID --versionField version --versionType java.lang.Long --versionColumn VERSION  --force
+focus --class ~.AssertDetails
+field string --fieldName description 
+field string --fieldName assertNumber 
+field string --fieldName serial 
+field string --fieldName taggedTo 
+field string --fieldName status
+repository jpa --all --package ~.repository
+service --all --apiPackage ~.service.api --implPackage ~.service.impl
+web mvc setup
+web mvc controller --all --responseType JSON
+push-in --all --force 
