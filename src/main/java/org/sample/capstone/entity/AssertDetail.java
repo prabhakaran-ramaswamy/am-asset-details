@@ -10,19 +10,14 @@ import javax.persistence.Version;
 
 
 @Entity
-@Table(name = "ASSERTDETAILS")
-
+@Table(name = "ASSERTDETAIL")
 public class AssertDetail {
 
     @Id
-    @SequenceGenerator(name = "assertDetailsGen", sequenceName = "ASSERTDETAILS_SEQ")
+    @SequenceGenerator(name = "assertDetailsGen", sequenceName = "ASSERTDETAIL_SEQ")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "assertDetailsGen")
-    @Column(name = "ASSERTDETAILS_ID")
+    @Column(name = "ASSERTDETAIL_ID")
     private Long id;
-
-    @Version
-    @Column(name = "VERSION")
-    private Long version;
 
     @Column(name = "DESCRIPTION")
     private String description;
@@ -45,14 +40,6 @@ public class AssertDetail {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
 	}
 
 	public String getDescription() {

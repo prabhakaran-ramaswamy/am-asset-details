@@ -57,7 +57,7 @@ public class AssertDetailCollectionJsonController {
 
     @PostMapping(name = "create")
     public ResponseEntity<?> create(@Valid @RequestBody AssertDetail assertDetails, BindingResult result) {
-        if (assertDetails.getId() != null || assertDetails.getVersion() != null) {
+        if (assertDetails.getId() != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         if (result.hasErrors()) {
