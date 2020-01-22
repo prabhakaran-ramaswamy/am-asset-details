@@ -1,1 +1,1 @@
-# am-asserts
+# am-assets

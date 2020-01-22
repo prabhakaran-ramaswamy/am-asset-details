@@ -1,38 +1,46 @@
 package org.sample.capstone.entity;
+
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Version;
-
 
 @Entity
-@Table(name = "ASSERTDETAIL")
-public class AssertDetail {
+@Table(name = "ASSET_DETAIL")
+public class AssetDetail {
 
-    @Id
-    @SequenceGenerator(name = "assertDetailsGen", sequenceName = "ASSERTDETAIL_SEQ")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "assertDetailsGen")
-    @Column(name = "ASSERTDETAIL_ID")
-    private Long id;
+	@Id
+	@SequenceGenerator(name = "assetDetailsGen", sequenceName = "ASSET_DETAIL_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "assetDetailsGen")
+	@Column(name = "ASSET_DETAIL_ID")
+	private Long id;
 
-    @Column(name = "DESCRIPTION")
-    private String description;
+	@Column(name = "DESCRIPTION")
+	private String description;
 
-    @Column(name = "ASSERT_NUMBER")
-    private String assertNumber;
+	@Column(name = "ASSET_NUMBER")
+	private String assetNumber;
 
-    @Column(name = "SERIAL")
-    private String serial;
+	@Column(name = "SERIAL")
+	private String serial;
 
-    @Column(name = "TAGGED_TO")
-    private String taggedTo;
+	@Column(name = "TAGGED_TO")
+	private String taggedTo;
 
-    @Column(name = "STATUS")
-    private String status;
+	@Column(name = "STATUS")
+	private String status;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "ASSET_ID")
+	private Set<ManagedAsset> managedAssets;
 
 	public Long getId() {
 		return id;
@@ -50,12 +58,12 @@ public class AssertDetail {
 		this.description = description;
 	}
 
-	public String getAssertNumber() {
-		return assertNumber;
+	public String getAssetNumber() {
+		return assetNumber;
 	}
 
-	public void setAssertNumber(String assertNumber) {
-		this.assertNumber = assertNumber;
+	public void setAssetNumber(String assetNumber) {
+		this.assetNumber = assetNumber;
 	}
 
 	public String getSerial() {
@@ -82,6 +90,14 @@ public class AssertDetail {
 		this.status = status;
 	}
 
+	public Set<ManagedAsset> getManagedAssets() {
+		return managedAssets;
+	}
+
+	public void setManagedAssets(Set<ManagedAsset> managedAssets) {
+		this.managedAssets = managedAssets;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -98,7 +114,7 @@ public class AssertDetail {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AssertDetail other = (AssertDetail) obj;
+		AssetDetail other = (AssetDetail) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
