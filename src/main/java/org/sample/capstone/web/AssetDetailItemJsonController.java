@@ -3,6 +3,8 @@ import javax.validation.Valid;
 
 import org.sample.capstone.entity.AssetDetail;
 import org.sample.capstone.exception.NotFoundException;
+import org.sample.capstone.helper.AssetDetailUtil;
+import org.sample.capstone.model.AssetDetailModel;
 import org.sample.capstone.service.api.AssetDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,30 +31,33 @@ public class AssetDetailItemJsonController {
     private AssetDetailService assetDetailsService;
 
     @ModelAttribute
-    public AssetDetail getAssetDetails(@PathVariable("assetDetail") Long id) {
-        AssetDetail assetDetails = assetDetailsService.findOne(id);
-        if (assetDetails == null) {
+    public AssetDetailModel getAssetDetails(@PathVariable("assetDetail") Long id) {
+        AssetDetail assetDetail= assetDetailsService.findOne(id);
+        if (assetDetail == null) {
             throw new NotFoundException(String.format("AssetDetails with identifier '%s' not found", id));
         }
-        return assetDetails;
+		AssetDetailModel assetDetailModel = AssetDetailUtil.copyAssetDetailToAssetDetailModel(assetDetail);
+
+        return assetDetailModel;
     }
 
     @GetMapping(name = "show")
-    public ResponseEntity<?> show(@ModelAttribute AssetDetail assetDetails) {
-        return ResponseEntity.ok(assetDetails);
+    public ResponseEntity<?> show(@ModelAttribute AssetDetailModel assetDetailModel) {
+        return ResponseEntity.ok(assetDetailModel);
     }
 
 
-    public static UriComponents showURI(AssetDetail assetDetails) {
-        return MvcUriComponentsBuilder.fromMethodCall(MvcUriComponentsBuilder.on(AssetDetailItemJsonController.class).show(assetDetails)).buildAndExpand(assetDetails.getId()).encode();
+    public static UriComponents showURI(AssetDetailModel assetDetailModel) {
+        return MvcUriComponentsBuilder.fromMethodCall(MvcUriComponentsBuilder.on(AssetDetailItemJsonController.class).show(assetDetailModel)).buildAndExpand(assetDetailModel.getId()).encode();
     }
 
 
     @PutMapping(name = "update")
-    public ResponseEntity<?> update(@ModelAttribute AssetDetail storedAssetDetails, @Valid @RequestBody AssetDetail assetDetails, BindingResult result) {
+    public ResponseEntity<?> update(@ModelAttribute AssetDetailModel storedAssetDetails, @Valid @RequestBody AssetDetailModel assetDetailModel, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         }
+		AssetDetail assetDetails = AssetDetailUtil.copyAssetDetailModelToAssetDetail(assetDetailModel);
         assetDetails.setId(storedAssetDetails.getId());
         assetDetailsService.save(assetDetails);
         return ResponseEntity.ok().build();
@@ -60,7 +65,8 @@ public class AssetDetailItemJsonController {
 
 
     @DeleteMapping(name = "delete")
-    public ResponseEntity<?> delete(@ModelAttribute AssetDetail assetDetails) {
+    public ResponseEntity<?> delete(@ModelAttribute AssetDetailModel assetDetailModel) {
+		AssetDetail assetDetails = AssetDetailUtil.copyAssetDetailModelToAssetDetail(assetDetailModel);
         assetDetailsService.delete(assetDetails);
         return ResponseEntity.ok().build();
     }

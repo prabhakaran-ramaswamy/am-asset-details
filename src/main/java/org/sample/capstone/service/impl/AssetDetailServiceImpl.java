@@ -1,5 +1,6 @@
 package org.sample.capstone.service.impl;
 import java.util.List;
+import java.util.Optional;
 
 import org.sample.capstone.entity.AssetDetail;
 import org.sample.capstone.repository.AssetDetailRepository;
@@ -42,12 +43,14 @@ public class AssetDetailServiceImpl implements AssetDetailService {
     }
 
     public AssetDetail findOne(Long id) {
-        return assetDetailsRepository.getOne(id);
+    	Optional<AssetDetail> findById = assetDetailsRepository.findById(id);
+		return findById.get();
     }
 
 
     public AssetDetail findOneForUpdate(Long id) {
-        return assetDetailsRepository.getOne(id);
+    	Optional<AssetDetail> findById = assetDetailsRepository.findById(id);
+		return findById.get();
     }
 
 

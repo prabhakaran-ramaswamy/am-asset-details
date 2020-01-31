@@ -14,10 +14,10 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import brave.sampler.Sampler;
 
 @SpringBootApplication
-public class AssetslApplication {
+public class AssetsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AssetslApplication.class, args);
+		SpringApplication.run(AssetsApplication.class, args);
 	}
 
 	@Bean
