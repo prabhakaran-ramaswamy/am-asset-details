@@ -1,18 +1,13 @@
 package org.sample.capstone.web;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.validation.Valid;
 
 import org.sample.capstone.entity.AssetDetail;
-import org.sample.capstone.helper.AssetDetailUtil;
-import org.sample.capstone.model.AssetDetailModel;
 import org.sample.capstone.service.api.AssetDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,13 +32,9 @@ public class AssetDetailCollectionJsonController {
 	private AssetDetailService assetDetailsService;
 
 	@GetMapping(name = "list")
-	public ResponseEntity<Page<AssetDetailModel>> list(Pageable pageable) {
+	public ResponseEntity<Page<AssetDetail>> list(Pageable pageable) {
 		Page<AssetDetail> assetDetailss = assetDetailsService.findAll(pageable);
-		List<AssetDetailModel> assetDetailModels = AssetDetailUtil
-				.copyAssetDetailsToAssetDetailModels(assetDetailss.getContent());
-		Page<AssetDetailModel> page = new PageImpl<>(assetDetailModels, assetDetailss.getPageable(),
-				assetDetailModels.size());
-		return ResponseEntity.ok(page);
+		return ResponseEntity.ok(assetDetailss);
 	}
 
 	public static UriComponents listURI() {
@@ -53,39 +44,36 @@ public class AssetDetailCollectionJsonController {
 	}
 
 	@PostMapping(name = "create")
-	public ResponseEntity<?> create(@Valid @RequestBody AssetDetailModel assetDetailModel, BindingResult result) {
-		if (assetDetailModel.getId() != null) {
+	public ResponseEntity<?> create(@Valid @RequestBody AssetDetail assetDetail, BindingResult result) {
+		if (assetDetail.getId() != null) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
 		}
-		AssetDetail assetDetail = AssetDetailUtil.copyAssetDetailModelToAssetDetail(assetDetailModel);
 		AssetDetail newAssetDetails = assetDetailsService.save(assetDetail);
 		UriComponents showURI = AssetDetailItemJsonController
-				.showURI(AssetDetailUtil.copyAssetDetailToAssetDetailModel(newAssetDetails));
+				.showURI(newAssetDetails);
 		return ResponseEntity.created(showURI.toUri()).build();
 	}
 
 	@PostMapping(value = "/batch", name = "createBatch")
-	public ResponseEntity<?> createBatch(@Valid @RequestBody Collection<AssetDetailModel> assetDetailss,
+	public ResponseEntity<?> createBatch(@Valid @RequestBody Collection<AssetDetail> assets,
 			BindingResult result) {
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
 		}
-		assetDetailsService.save(
-				AssetDetailUtil.copyAssetDetailModelsToAssetDetails(new ArrayList<AssetDetailModel>(assetDetailss)));
+		assetDetailsService.save(assets);
 		return ResponseEntity.created(listURI().toUri()).build();
 	}
 
 	@PutMapping(value = "/batch", name = "updateBatch")
-	public ResponseEntity<?> updateBatch(@Valid @RequestBody Collection<AssetDetailModel> assetDetailss,
+	public ResponseEntity<?> updateBatch(@Valid @RequestBody Collection<AssetDetail> assets,
 			BindingResult result) {
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
 		}
-		assetDetailsService.save(
-				AssetDetailUtil.copyAssetDetailModelsToAssetDetails(new ArrayList<AssetDetailModel>(assetDetailss)));
+		assetDetailsService.save(assets);
 		return ResponseEntity.ok().build();
 	}
 
