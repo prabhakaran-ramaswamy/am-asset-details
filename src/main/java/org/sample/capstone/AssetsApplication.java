@@ -1,5 +1,6 @@
 package org.sample.capstone;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
@@ -50,5 +51,10 @@ public class AssetsApplication {
 	@Bean
 	public Sampler defaultSampler() {
 		return Sampler.ALWAYS_SAMPLE;
+	}
+
+	@Bean
+	public ModelMapper modelMapper() {
+	    return new ModelMapper();
 	}
 }

@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import javax.validation.Valid;
 
-import org.sample.capstone.entity.AssetDetail;
+import org.sample.capstone.entity.AssetDetailView;
 import org.sample.capstone.service.api.AssetDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,8 +32,8 @@ public class AssetDetailCollectionJsonController {
 	private AssetDetailService assetDetailsService;
 
 	@GetMapping(name = "list")
-	public ResponseEntity<Page<AssetDetail>> list(Pageable pageable) {
-		Page<AssetDetail> assetDetailss = assetDetailsService.findAll(pageable);
+	public ResponseEntity<Page<AssetDetailView>> list(Pageable pageable) {
+		Page<AssetDetailView> assetDetailss = assetDetailsService.findAll(pageable);
 		return ResponseEntity.ok(assetDetailss);
 	}
 
@@ -44,21 +44,21 @@ public class AssetDetailCollectionJsonController {
 	}
 
 	@PostMapping(name = "create")
-	public ResponseEntity<?> create(@Valid @RequestBody AssetDetail assetDetail, BindingResult result) {
-		if (assetDetail.getId() != null) {
+	public ResponseEntity<?> create(@Valid @RequestBody AssetDetailView AssetDetailView, BindingResult result) {
+		if (AssetDetailView.getId() != null) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
 		}
-		AssetDetail newAssetDetails = assetDetailsService.save(assetDetail);
+		AssetDetailView newAssetDetails = assetDetailsService.save(AssetDetailView);
 		UriComponents showURI = AssetDetailItemJsonController
 				.showURI(newAssetDetails);
 		return ResponseEntity.created(showURI.toUri()).build();
 	}
 
 	@PostMapping(value = "/batch", name = "createBatch")
-	public ResponseEntity<?> createBatch(@Valid @RequestBody Collection<AssetDetail> assets,
+	public ResponseEntity<?> createBatch(@Valid @RequestBody Collection<AssetDetailView> assets,
 			BindingResult result) {
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
@@ -68,7 +68,7 @@ public class AssetDetailCollectionJsonController {
 	}
 
 	@PutMapping(value = "/batch", name = "updateBatch")
-	public ResponseEntity<?> updateBatch(@Valid @RequestBody Collection<AssetDetail> assets,
+	public ResponseEntity<?> updateBatch(@Valid @RequestBody Collection<AssetDetailView> assets,
 			BindingResult result) {
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
